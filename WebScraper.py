@@ -11,7 +11,7 @@
 #  
 # Colin OKeefe for 'Practical Introduction to Web Scraping in Python" 
 
-# In[44]:
+# In[1]:
 
 from timeit import default_timer as timer
 
@@ -28,6 +28,7 @@ from requests import get
 from requests.exceptions import RequestException
 from contextlib import closing
 from bs4 import BeautifulSoup
+import pandas as pd
 
 
 # Some Functions Below
@@ -48,7 +49,7 @@ from bs4 import BeautifulSoup
 #                 Prints the error to the console. 
 #                 
 
-# In[ ]:
+# In[2]:
 
 def simple_get(url):
     """
@@ -68,7 +69,7 @@ def simple_get(url):
         return None
 
 
-# In[ ]:
+# In[3]:
 
 def is_good_response(resp):
     """
@@ -80,7 +81,7 @@ def is_good_response(resp):
             and content_type.find('html') > -1)
 
 
-# In[ ]:
+# In[4]:
 
 def log_error(error):
     """
@@ -99,7 +100,7 @@ def log_error(error):
 # 
 # Credit: Colin OKeefe for his blog post. 
 
-# In[41]:
+# In[5]:
 
 raw_HTML = simple_get('http://www.fabpedigree.com/james/mathmen.htm')
 """
@@ -115,7 +116,7 @@ for i, li in enumerate(html.select('li')):
     print(i, li.text)
 
 
-# In[42]:
+# In[6]:
 
 def get_names():
     """
@@ -138,7 +139,7 @@ def get_names():
     raise Exception('Error retrieving contents at {}'.format(url))
 
 
-# In[43]:
+# In[7]:
 
 def get_hits_on_name(name):
     """
@@ -169,18 +170,21 @@ def get_hits_on_name(name):
     return None
 
 
-# In[39]:
+# In[8]:
 
 '''
 Main Method
 '''
 if __name__ == '__main__':
+    global_start = timer()
+    
+    start = timer()   
     print('Getting the list of names....')
     names = get_names()
-    print('... done.\n')
+    print('... done in: ',round(timer()-start, 2), ' seconds \n')
 
     results = []
-
+    start = timer();
     print('Getting stats for each name....')
 
     for name in names:
@@ -194,8 +198,10 @@ if __name__ == '__main__':
             log_error('error encountered while processing '
                       '{}, skipping'.format(name))
 
-    print('... done.\n')
+    print('... done in: ',round(timer()-start, 2),' seconds \n')
 
+    start = timer();
+    
     results.sort()
     results.reverse()
 
@@ -210,7 +216,8 @@ if __name__ == '__main__':
 
     no_results = len([res for res in results if res[0] == -1])
     print('\nBut we did not find results for '
-          '{} mathematicians on the list'.format(no_results))
+          '{} mathematicians on the list'.format(no_results)+'\n')
+    print('Finished in: ', round(timer()-global_start,2),' seconds')
 
 
 # In[ ]:
