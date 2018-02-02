@@ -14,7 +14,7 @@ download_articles <- function(Symbol) {
 }
 
 # read in data set containing companies of interest
-real_state <- read.csv("~/documents/data/BDAI/Data sets/realestate_landlords.csv", header = TRUE)
+real_state <- read.csv("realestate_landlords.csv", header = TRUE)
 # use the data to download articles of interest
 stock_articles <- real_state[real_state$Symbol != "",c("Company", "Symbol")] %>%
   mutate(corpus = map(Symbol, download_articles))
